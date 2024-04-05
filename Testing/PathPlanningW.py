@@ -12,13 +12,13 @@ def printTurn(deg):
 
 # Shelving Locations
 # A1 - 0, A2 - 1, C1 - 2, C2 - 3, B1 - 4, B2 - 5, D1 - 6, D2 - 7
-shelving = int(input('What shelving would you like to drive to? '))
+shelving = int(input('What shelving would you like to drive to?\nA1 = 0, A2 = 1\nC1 = 2, C2 = 3\nB1 = 4, B2 = 5\nD1 = 6, D2 = 7\nInput: '))
 while shelving < 0 or shelving > 7:
-    shelving = int(input('Invalid location.\nWhat shelving would you like to drive to? '))
+    shelving = int(input('Invalid location.\nWhat shelving would you like to drive to?\nA1 = 0, A2 = 1\nC1 = 2, C2 = 3\nB1 = 4, B2 = 5\nD1 = 6, D2 = 7\nInput: '))
 
 # Box Number
 # Numbered like the guide on canvas
-# 1-6 on top, 7-12 on bottom
+# 1-6 on bottom, 7-12 on top
 box_num = int(input('What box would you like to drive to? '))
 while box_num < 1 or box_num > 12:
     box_num = int(input('Invalid location.\nWhat box would you like to drive to? '))
@@ -40,7 +40,7 @@ if scan_success:
 
 # ---- GET TO BOX 
 # Exit home and drive to correct Y level of target
-leave_home_fwd = 12 + 24 * bool(box_num <= 7) + 24 * (shelving % 4)
+leave_home_fwd = 12 + 24 * bool(box_num >= 7) + 24 * (shelving % 4)
 printFwd(leave_home_fwd)
 
 printTurn(90)
@@ -50,7 +50,7 @@ to_box_fwd = 9 + 6 * ((box_num-1) % 6) + 48 * bool(shelving >= 4)
 print('Drive forward: {0:0.1f}in'.format(to_box_fwd))
 
 # Turn towards the box
-if box_num <= 6:
+if box_num >= 7:
     printTurn(90)
 else:
     printTurn(-90)
@@ -69,8 +69,8 @@ printFwd(fwd)
 if scan_success:
     # Turn towards target location
     # Swapped direction from previous
-    if target_location <= 1:
-        if box_num <= 6:
+    if target_location == 1:
+        if box_num >= 7:
             printTurn(90)
         else:
             printTurn(-90)
@@ -80,7 +80,7 @@ if scan_success:
         printFwd(fwd)
 
     else:
-        if box_num <= 6:
+        if box_num >= 7:
             printTurn(-90)
         else:
             printTurn(90)
@@ -91,20 +91,20 @@ if scan_success:
 
 
     if target_location == 0 or target_location == 3:
-        if box_num <= 6:
+        if box_num >= 7:
             printTurn(-90)
         else:
             printTurn(90)
 
     else:
-        if box_num <= 6:
+        if box_num >= 7:
             printTurn(-90)
         else:
             printTurn(90)
 
     # Drive to home/dropoff location
     if target_location <= 1:
-        if box_num <= 6:
+        if box_num >= 7:
             printTurn(90)
         else:
             printTurn(-90)
@@ -114,7 +114,7 @@ if scan_success:
         printFwd(fwd)
 
     else:
-        if box_num <= 6:
+        if box_num >= 7:
             printTurn(-90)
         else:
             printTurn(90)
