@@ -14,12 +14,15 @@ def printFwd(dist):
 def printTurn(deg):
     print('Turn right {0:0.1f}deg'.format(deg))
 
-def scan_box():
-    print('Scan Box')
+def scan_box(success):
+    print('Scan Box: Success or Failure: {0}'.format(success))
 
 def place_down_box():
     print('Place Down Box')
 
+# ----- CONSTANTS
+BOX_MARGIN_X = 0
+BOX_MARGIN_Y = 6
 
 # ----- INPUT
 
@@ -38,13 +41,14 @@ while box_num < 1 or box_num > 12:
 
 # Invalid ID
 # If the barcode is the incorrect ID
-scan_success = bool(input('Will the barcode have scanned successfully? (True or False) '))
+scan_success_input = input('Will the barcode have scanned successfully? (True or False) ')
+scan_success = scan_success_input == "True"
 
 # Target location
-# Home A - 0, Home C - 1, Home B - 2, Home D - 3
+# Home C - 1, Home B - 2, Home D - 3
 target_location = 0
 if scan_success:
-    target_location = int(input('What would be the target location?'))
+    target_location = int(input('What would be the target location?\nC = 1\nB = 2\nD = 3\nInput: '))
     while target_location < 0 or target_location > 3:
         target_location = int(input('Invalid location.\nWhat location would you like to drive to drop off? '))
 
@@ -59,7 +63,7 @@ printFwd(leave_home_fwd)
 printTurn(90)
 
 # Drive towards box
-to_box_fwd = 9 + 6 * ((box_num-1) % 6) + 48 * bool(shelving >= 4)
+to_box_fwd = BOX_MARGIN_X + 9 + 6 * ((box_num-1) % 6) + 48 * bool(shelving >= 4)
 printFwd(to_box_fwd)
 
 # Turn towards the box
@@ -69,16 +73,16 @@ else:
     printTurn(-90)
 
 # Drive right in front of box
-fwd = 6
+fwd = BOX_MARGIN_Y
 printFwd(fwd)
 
 # Scanning would take place here ~~~~
-scan_box()
+scan_box(scan_success)
 
 # ---- LEAVE BOX
 
 # Drive backwards away from box
-fwd = -6
+fwd = -BOX_MARGIN_Y
 printFwd(fwd)
 
 if scan_success:
@@ -121,7 +125,7 @@ if scan_success:
         printFwd(fwd)
 
     else:
-        # Drive towards box
+        # Drive towards home B
         fwd = leave_home_fwd
         printFwd(fwd)
     
