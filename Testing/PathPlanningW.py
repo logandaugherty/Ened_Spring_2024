@@ -1,11 +1,24 @@
 import math
 
+# Path Planning
+# By: Logan Daugherty
+# Created: 3-29 | Last Updated: 4-5
+
+# ----- Commands
+
+# These will be replaced with robot movement once Algorithm is confirmed to work
+
 def printFwd(dist):
     print('Drive forward: {0:0.1f}in'.format(dist))
 
 def printTurn(deg):
     print('Turn right {0:0.1f}deg'.format(deg))
-        
+
+def scan_box():
+    print('Scan Box')
+
+def place_down_box():
+    print('Place Down Box')
 
 
 # ----- INPUT
@@ -47,7 +60,7 @@ printTurn(90)
 
 # Drive towards box
 to_box_fwd = 9 + 6 * ((box_num-1) % 6) + 48 * bool(shelving >= 4)
-print('Drive forward: {0:0.1f}in'.format(to_box_fwd))
+printFwd(to_box_fwd)
 
 # Turn towards the box
 if box_num >= 7:
@@ -60,15 +73,19 @@ fwd = 6
 printFwd(fwd)
 
 # Scanning would take place here ~~~~
-
-# Drive backwards away from box
-fwd = 6
-printFwd(fwd)
+scan_box()
 
 # ---- LEAVE BOX
+
+# Drive backwards away from box
+fwd = -6
+printFwd(fwd)
+
 if scan_success:
+    # ---- DROP OFF BOX
+
     # Turn towards target location
-    # Swapped direction from previous
+    # If the home is on the left-hand side of the map,
     if target_location == 1:
         if box_num >= 7:
             printTurn(90)
@@ -79,49 +96,101 @@ if scan_success:
         fwd = to_box_fwd
         printFwd(fwd)
 
+    # If the home is on the right-hand side of the map,
     else:
         if box_num >= 7:
             printTurn(-90)
         else:
             printTurn(90)
 
-        # Drive towards box
+        # Drive towards side aisle of home
         fwd = 96 - to_box_fwd
         printFwd(fwd)
 
-
-    if target_location == 0 or target_location == 3:
-        if box_num >= 7:
-            printTurn(-90)
-        else:
-            printTurn(90)
+    # Turn to face drop-off home
+    if target_location == 1 or target_location == 2:
+        printTurn(90)
 
     else:
-        if box_num >= 7:
-            printTurn(-90)
-        else:
-            printTurn(90)
-
-    # Drive to home/dropoff location
-    if target_location <= 1:
-        if box_num >= 7:
-            printTurn(90)
-        else:
-            printTurn(-90)
-
+        printTurn(-90)
+    
+    # Drive to drop-off home
+    if target_location == 1 or target_location == 3:
         # Drive towards box
-        fwd = to_box_fwd
+        fwd = 108-to_box_fwd
         printFwd(fwd)
 
     else:
-        if box_num >= 7:
+        # Drive towards box
+        fwd = leave_home_fwd
+        printFwd(fwd)
+    
+    place_down_box()
+
+
+
+    # ---- Drive Home
+    # Back away from drop-off home
+    fwd = -6
+    printFwd(fwd)
+
+    # Turn away from drop-off
+    printTurn(180)
+
+    # If at Drop-off C (Directly facing home)
+    if target_location == 1:
+
+        # Simply drive straight home
+        fwd = 114
+        printFwd(fwd)
+    
+    # If at any other Drop-off (B or D)
+    else:
+        # If at B, turn to the left
+        if target_location == 2:
+            # Drive into bottom aisle 
+            fwd = 6
+            printFwd(fwd)
+
+            # Turn to drive to Home A
             printTurn(-90)
-        else:
+        
+        elif target_location == 3:
+            # Drive into bottom aisle 
+            fwd = 102
+            printFwd(fwd)
+
+            # Turn to drive to Home A
             printTurn(90)
 
-        # Drive towards box
-        fwd = 96 - to_box_fwd
+        # Drive in front of Home A
+        fwd = 96
         printFwd(fwd)
 
+        # Turn to Home A
+        printTurn(-90)
+
+        # Drive into Home A
+        fwd = 12
+        printFwd(fwd)
+
+# If the scan was not successful
+else:
+    # Turn towards left edge of map
+    if box_num >= 7:
+        printTurn(-90)
+    else:
+        printTurn(90)
+
+    # Drive to left-hand edge of map
+    printFwd(to_box_fwd)
+
+    # Turn towards the home
+    printTurn(-90)
+
+    # Drive home
+    printFwd(leave_home_fwd)
+
+# Return to original direction, prepared for another order
 print('Turn to 0deg header')
     
