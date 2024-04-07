@@ -1,6 +1,6 @@
-from Support.CustomMotorGroup import *
-from Support.ScanBox import *
-from Support.Lift import *
+from Demo.CustomMotorGroup import *
+from Demo.ScanBox import *
+from Demo.Lift import *
 
 # -------------------------------------------------------------
 
@@ -11,12 +11,12 @@ from Support.Lift import *
 
 # Shelving Locations
 # A1 - 0, A2 - 1, C1 - 2, C2 - 3, B1 - 4, B2 - 5, D1 - 6, D2 - 7
-shelving_list = [0]
+shelving_list = [2]
 
 # Box Number
 # Numbered like the guide on canvas
 # 1-6 on bottom, 7-12 on top
-box_num_list = [1]
+box_num_list = [5]
 
 # Target location
 # Home C - 1, Home B - 2, Home D - 3
