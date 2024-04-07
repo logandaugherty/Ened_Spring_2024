@@ -1,24 +1,50 @@
-box_num = 8
+#!/usr/bin/env python3
+from CustomMotorGroup import *
+from ev3dev2.motor import MediumMotor, OUTPUT_B
+
+# -------------------------------------------------------------
+
+# Final Track
+# Robot drives to a designated box, scans it, and drives to a target location, if applicable
+
+# ENTER DATA HERE
+# Did the Subtask 1 succeed? If so, set this to true
+box_num = 9
+
+# -------------------------------------------------------------
 
 # ----- CONSTANTS
 BOX_MARGIN_X = 0
-BOX_MARGIN_Y = 6
 
-def drive(inches):
-    print('Drive: {0:0.1f} in fwd'.format(inches))
+# ---------- INITIALIZATION -----
+drive = MotorGroup()
+drive.init()
+liftMtr = MediumMotor(OUTPUT_B)
+liftMtr.reset()
 
-def turn_right(deg):
-    print('Turn: {0:0.1f} right'.format(deg))
+liftMtr.reset()
+liftMtr.on_to_position(-100,550,True)
+sleep(0.125)
 
-print('Pick up Box')
+drive.m1.on(-20,True,False)
+drive.m2.on(-20,True,False)
+sleep(1)
+drive.m1.on(20,True,False)
+drive.m2.on(20,True,False)
+sleep(1.3)
+drive.m1.stop()
+drive.m2.stop()
 
-drive(-BOX_MARGIN_Y)
+liftMtr.on_to_position(100,100,True)
 
-turn_right(-90)
+drive.drive_in(-6)
+
+drive.turn_ang_rel(-90)
 
 to_box_fwd = BOX_MARGIN_X + 9 + 6 * ((box_num-1) % 6)
 fwd = 54 - to_box_fwd
 fwd -= 12
-drive(fwd)
+drive.drive_in(fwd)
 
-print('Lower Box')
+liftMtr.on_to_position(-100,550,True)
+drive.drive_in(-6)

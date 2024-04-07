@@ -46,6 +46,8 @@ class MotorGroup:
         ramp_speed_deg = self.SLOW_SPEED_DEG
         if distance_deg < 0:
             ramp_speed_deg *= -1
+            min_speed *= -1
+            max_speed *= -1
 
         self.m1.position = 0
         
@@ -111,6 +113,7 @@ class MotorGroup:
         start_ang_deg = self.target_ang_deg
         self.target_ang_deg = deg
 
+        self.speaker.speak('Turning {0:0.0f} to {1:0.0f}'.format(self.gyro.angle, self.target_ang_deg))
         ramp_speed_deg = self.SLOW_SPEED_ANG_DEG
         if deg-start_ang_deg < 0:
             ramp_speed_deg *= -1
@@ -118,6 +121,9 @@ class MotorGroup:
         self.turn_ang_abs_lin(start_ang_deg+ramp_speed_deg, min_speed, max_speed)
         self.turn_ang_abs_lin(self.target_ang_deg-ramp_speed_deg, max_speed, max_speed)
         self.turn_ang_abs_lin(self.target_ang_deg, max_speed, min_speed, break_hold)
+
+        sleep(1)
+        self.speaker.speak('{0:0.0f}'.format(self.gyro.angle))
 
     # Drive to a certain rotation with a start and end speed
     def turn_ang_abs_lin(self, angle_degrees, start_speed, end_speed, break_hold=False):

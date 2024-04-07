@@ -1,28 +1,54 @@
+#!/usr/bin/env python3
+from CustomMotorGroup import *
+from ev3dev2.sensor.lego import UltrasonicSensor
+from ev3dev2.sensor import INPUT_2
+from time import sleep
+from ev3dev2.motor import MediumMotor, OUTPUT_B
+from ev3dev2.sound import Sound
 
-box_num = 8
+# -------------------------------------------------------------
+
+# Final Track
+# Robot drives to a designated box, scans it, and drives to a target location, if applicable
+
+# ENTER DATA HERE
+# Did the Subtask 1 succeed? If so, set this to true
+box_num = 9
+
+# -------------------------------------------------------------
+
 
 # ----- CONSTANTS
-BOX_MARGIN_X = 0
-BOX_MARGIN_Y = 6
+BOX_MARGIN_X = 2.25
 
-def drive(inches):
-    print('Drive: {0:0.1f} in fwd'.format(inches))
-
-def turn_right(deg):
-    print('Turn: {0:0.1f} right'.format(deg))
-
+# ---------- INITIALIZATION -----
+drive = MotorGroup()
+ultrasonic_sensor = UltrasonicSensor(INPUT_2)
+drive.init()
+speaker = Sound()
+liftMtr = MediumMotor(OUTPUT_B)
+liftMtr.reset()
 
 # Drive towards box
 to_box_fwd = BOX_MARGIN_X + 9 + 6 * ((box_num-1) % 6)
-drive(to_box_fwd)
+drive.drive_in(to_box_fwd)
 
-turn_right(90)
+drive.turn_ang_rel(90)
 
-drive(BOX_MARGIN_Y)
+start_rotation = drive.m1.position
+drive.m1.on(20,True,False)
+drive.m2.on(20,True,False)
+while ultrasonic_sensor.distance_inches > 1.5:
+    sleep(0.02)
+drive.m1.stop()
+drive.m2.stop()
 
-print('Scan Box')
+sleep(1)
+
+liftMtr.on_to_position(100,100,True)
+
 scan_success = True
 if scan_success:
-    print('Speak: This box is correct')
+    speaker.speak('This box is correct')
 else:
-    print('Speak: This box is not correct')
+    speaker.speak('This box is not correct')

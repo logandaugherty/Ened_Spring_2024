@@ -7,7 +7,7 @@ driveLMtr = LargeMotor(OUTPUT_D)
 driveRMtr = LargeMotor(OUTPUT_A)
 
 liftMtr.reset()
-liftMtr.on_to_position(-100,570,False)
+liftMtr.on_to_position(-100,550,True)
 sleep(0.125)
 
 driveLMtr.on(-20,True,False)

@@ -8,18 +8,19 @@ speaker = Sound()
 drive = MotorGroup()
 drive.init()
 
-# drive.drive_in(15)
+drive.drive_in(-15)
+drive.drive_in(15)
 
-drive.turn_ang_rel(90)
-
-# drive.drive_in(15)
-
-drive.turn_ang_rel(90)
+# drive.turn_ang_rel(90)
 
 # drive.drive_in(15)
 
-drive.turn_ang_rel(90)
+# drive.turn_ang_rel(90)
 
 # drive.drive_in(15)
 
-drive.turn_ang_abs(0)
+# drive.turn_ang_rel(90)
+
+# drive.drive_in(15)
+
+# drive.turn_ang_abs(0)

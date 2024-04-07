@@ -1,27 +1,31 @@
+#!/usr/bin/env python3
+from CustomMotorGroup import *
+
+# -------------------------------------------------------------
+
+# Final Track
+# Robot drives to a designated box, scans it, and drives to a target location, if applicable
+
+# ENTER DATA HERE
+# Did the Subtask 1 succeed? If so, set this to true
 Continuing_subtask1_program = False
 
-def drive(inches):
-    print('Drive: {0:0.1f} in fwd'.format(inches))
+# -------------------------------------------------------------
 
-def turn_right(deg):
-    print('Turn: {0:0.1f} right'.format(deg))
-
-# ----- CONSTANTS
-BOX_MARGIN_X = 0
-BOX_MARGIN_Y = 6
+# ---------- INITIALIZATION -----
+drive = MotorGroup()
 
 if not Continuing_subtask1_program:
-    print('Initializing Sensors')
-    print('Setting Gyro Angle to 180')
+    drive.init()
 
-drive(-12)
+drive.drive_in(-12)
 
-turn_right(90)
+drive.turn_ang_rel(90)
 
-drive(96)
+drive.drive_in(96)
 
-turn_right(-90)
+drive.turn_ang_rel(-90)
 
-drive(12)
+drive.drive_in(12)
 
-print('Turn To 0 degrees header')
+drive.turn_ang_abs(180)
