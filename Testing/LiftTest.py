@@ -7,20 +7,37 @@ driveLMtr = LargeMotor(OUTPUT_D)
 driveRMtr = LargeMotor(OUTPUT_A)
 
 liftMtr.reset()
-liftMtr.on_to_position(-100,-550,False)
+liftMtr.on_to_position(-100,570,False)
 sleep(0.125)
-
-liftMtr.on_to_position(-30,-210,False)
-sleep(3)
 
 driveLMtr.on(-20,True,False)
 driveRMtr.on(-20,True,False)
-sleep(0.5)
+sleep(1)
 driveLMtr.on(20,True,False)
 driveRMtr.on(20,True,False)
-sleep(0.5)
+sleep(1.3)
 driveLMtr.stop()
 driveRMtr.stop()
 
-liftMtr.on_to_position(-100,-412,False)
+liftMtr.on_to_position(100,100,True)
 sleep(5)
+
+
+# liftMtr.reset()
+# liftMtr.on_to_position(-100,-550,False)
+# sleep(0.125)
+
+# liftMtr.on_to_position(30,-280,False)
+# sleep(1)
+
+# driveLMtr.on(-20,True,False)
+# driveRMtr.on(-20,True,False)
+# sleep(0.5)
+# driveLMtr.on(20,True,False)
+# driveRMtr.on(20,True,False)
+# sleep(0.7)
+# driveLMtr.stop()
+# driveRMtr.stop()
+
+# liftMtr.on_to_position(100,10,True)
+# sleep(5)

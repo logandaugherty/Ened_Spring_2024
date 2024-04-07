@@ -2,7 +2,7 @@ from ev3dev2.motor import LargeMotor, SpeedPercent, OUTPUT_A, OUTPUT_D
 from ev3dev2.sensor.lego import GyroSensor
 from ev3dev2.sensor import INPUT_3
 from time import sleep
-# from Ramp_Speed import ramp_speed_rotation
+from ev3dev2.sound import Sound
 
 # Motor Group
 # Contains all relevant functions pertaining to operation for Subtasks 1 and 2
@@ -12,6 +12,8 @@ class MotorGroup:
     m2 = LargeMotor(OUTPUT_D)
     gyro = GyroSensor(INPUT_3)
     gyro.mode = GyroSensor.MODE_GYRO_ANG
+
+    speaker = Sound()
 
     target_ang_deg = 0
     
@@ -93,48 +95,6 @@ class MotorGroup:
         if break_hold:
             self.stop()
 
-    # # Drive to a certain rotation with a start and end speed
-    # def drive_deg_lin(self, position_degrees, start_speed, end_speed, gyro_header, break_hold=False):
-        
-    #     self.m1.position = 0
-
-    #     # Determine if the wheels are traveling forwards or backwards
-    #     direction = position_degrees > 0
-    #     if direction == False:
-    #         start_speed *= -1
-    #         end_speed *= -1
-
-    #     # Determine the amount of speed to change 
-    #     speed_per_degree = (end_speed-start_speed) / position_degrees
-
-    #     # Store the error as the distance from the target
-    #     error_degrees = position_degrees
-
-    #     # i = 0
-    #     # While the robot has not yet reached its target
-    #     while ((error_degrees > 0 ) and direction) or ((error_degrees<0) and not direction):
-    #         # Find the distance from the target
-    #         error_degrees = position_degrees-self.m1.degrees
-
-    #         # Determine the speed in which to run the motors
-    #         speed = self.m1.degrees*speed_per_degree+start_speed
-
-    #         realign_speed = 0
-    #         if (self.gyro.angle - gyro_header) > 1:
-    #             realign_speed = - 0.5
-    #         elif (self.gyro.angle - gyro_header) < -1:
-    #             realign_speed = 0.5
-
-    #         self.m1.on(SpeedPercent(speed-realign_speed))
-    #         self.m2.on(SpeedPercent(speed+realign_speed))
-
-    #         # Wait for sensors to update
-    #         sleep(self.DELTA_T)
-
-    #     # If the user want to brake after driving, do so
-    #     if break_hold:
-    #         self.stop()
-
     # Store the amount of turning degrees in which the robot accelerates/decellerates
     SLOW_SPEED_ANG_DEG = 30 
 
@@ -144,10 +104,10 @@ class MotorGroup:
         self.gyro.calibrate()
         self.gyro.reset()
 
-    def turn_ang_rel(self, deg, min_speed = 4, max_speed = 12, break_hold=True):
+    def turn_ang_rel(self, deg, min_speed = 3, max_speed = 12, break_hold=True):
         self.turn_ang_abs(self.target_ang_deg+deg, min_speed, max_speed, break_hold)
 
-    def turn_ang_abs(self, deg, min_speed = 4, max_speed = 12, break_hold=True):
+    def turn_ang_abs(self, deg, min_speed = 3, max_speed = 12, break_hold=True):
         start_ang_deg = self.target_ang_deg
         self.target_ang_deg = deg
 
@@ -161,6 +121,8 @@ class MotorGroup:
 
     # Drive to a certain rotation with a start and end speed
     def turn_ang_abs_lin(self, angle_degrees, start_speed, end_speed, break_hold=False):
+
+        angle_degrees -= 1
         
         # Determine the degrees between the starting and ending position
         rel_end_angle = angle_degrees - self.gyro.angle
