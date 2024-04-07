@@ -121,62 +121,53 @@ if scan_success:
     # Drive to drop-off home
     if target_location == 1 or target_location == 3:
         # Drive towards box
-        fwd = 108-to_box_fwd
+        fwd = 108-leave_home_fwd
         printFwd(fwd)
 
     else:
         # Drive towards home B
-        fwd = leave_home_fwd
+        fwd = leave_home_fwd-6
         printFwd(fwd)
     
     place_down_box()
-
-
 
     # ---- Drive Home
     # Back away from drop-off home
     fwd = -6
     printFwd(fwd)
 
-    # Turn away from drop-off
-    printTurn(180)
+    # If at Drop-off B
+    if target_location == 1 or target_location == 3:
+        # Turn away from drop-off
+        printTurn(180)
 
-    # If at Drop-off C (Directly facing home)
-    if target_location == 1:
+        # If at Drop-off C (Directly facing home)
+        if target_location == 1:
 
-        # Simply drive straight home
-        fwd = 114
-        printFwd(fwd)
-    
-    # If at any other Drop-off (B or D)
-    else:
-        # If at B, turn to the left
-        if target_location == 2:
-            # Drive into bottom aisle 
-            fwd = 6
+            # Simply drive straight home
+            fwd = 108
             printFwd(fwd)
-
-            # Turn to drive to Home A
-            printTurn(-90)
-        
+            
+        # If at any other Drop-off (B or D)
         elif target_location == 3:
             # Drive into bottom aisle 
             fwd = 102
             printFwd(fwd)
 
+    if target_location == 2 or target_location == 3:
             # Turn to drive to Home A
             printTurn(90)
 
-        # Drive in front of Home A
-        fwd = 96
-        printFwd(fwd)
+            # Drive in front of Home A
+            fwd = 96
+            printFwd(fwd)
 
-        # Turn to Home A
-        printTurn(-90)
+            # Turn to Home A
+            printTurn(-90)
 
-        # Drive into Home A
-        fwd = 12
-        printFwd(fwd)
+            # Drive into Home A
+            fwd = 12
+            printFwd(fwd)
 
 # If the scan was not successful
 else:

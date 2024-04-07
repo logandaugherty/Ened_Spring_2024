@@ -11,7 +11,7 @@ from CustomMotorGroup import *
 
 # Distance (in inches)
 # Enter the distance to drive in the unit of inches
-DISTANCE_INCHES = 24
+DISTANCE_INCHES = 52
 
 # -------------------------------------------------------------
 
@@ -23,6 +23,8 @@ MAX_SPEED_FWD = 24
 
 # Reset gyro rotation
 motor_group.reset_encoders()
+
+motor_group.reset_gryo()
 
 sleep(2)
 

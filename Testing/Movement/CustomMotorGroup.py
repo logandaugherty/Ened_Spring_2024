@@ -13,11 +13,9 @@ class MotorGroup:
     gyro = GyroSensor(INPUT_3)
     gyro.mode = GyroSensor.MODE_GYRO_ANG
     
-    INCHES_TO_DEGREES = 360/(2.204724*3.14159265)
+    INCHES_TO_DEGREES = 68.85579087
 
     DELTA_T = 0.02
-    LEFT_MOTOR_DELAY = 0.04
-    LEFT_MOTOR_DELAY_INTERVAL = LEFT_MOTOR_DELAY/DELTA_T
 
     # Reset motor encoders
     def reset_encoders(self):
@@ -65,9 +63,9 @@ class MotorGroup:
 
             realign_speed = 0
             if (self.gyro.angle - gyro_header) > 1:
-                realign_speed = - 1
+                realign_speed = - 0.5
             elif (self.gyro.angle - gyro_header) < -1:
-                realign_speed = 1
+                realign_speed = 0.5
 
 
             # if i >= LEFT_MOTOR_DELAY_INTERVAL:
@@ -120,10 +118,7 @@ class MotorGroup:
                 speed *= -1
 
             self.m1.on(SpeedPercent(-speed))
-
-            if i >= self.LEFT_MOTOR_DELAY_INTERVAL:
-                self.m2.on(SpeedPercent(speed))
-            i+=1
+            self.m2.on(SpeedPercent(speed))
 
             # Wait for sensors to update
             sleep(self.DELTA_T)
