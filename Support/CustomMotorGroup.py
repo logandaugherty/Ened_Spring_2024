@@ -12,10 +12,17 @@ class MotorGroup:
     m2 = LargeMotor(OUTPUT_D)
     gyro = GyroSensor(INPUT_3)
     gyro.mode = GyroSensor.MODE_GYRO_ANG
+
+    target_ang_deg = 0
     
     INCHES_TO_DEGREES = 68.85579087
 
     DELTA_T = 0.02
+
+    def init(self):
+        self.reset_encoders()
+        self.reset_gryo()
+        sleep(2)
 
     # Reset motor encoders
     def reset_encoders(self):
@@ -25,17 +32,19 @@ class MotorGroup:
     # Store the amount of motor degrees to allot for speeding up or slowing down
     SLOW_SPEED_DEG = 180
 
-    def move_distance_in(self, min_speed, max_speed, distance_in, gyro_header, break_hold):
-        distance_deg= distance_in * self.INCHES_TO_DEGREES
+    def drive_in(self, distance_in, min_speed = 4, max_speed = 24, gyro_header = -99999, break_hold=True):
+        if gyro_header == -99999:
+            gyro_header = self.target_ang
+        distance_deg = distance_in * self.INCHES_TO_DEGREES
         self.move_distance_deg(min_speed,max_speed,distance_deg,gyro_header,break_hold)
 
-    def move_distance_deg(self, min_speed, max_speed, distance_deg, gyro_header, break_hold):
+    def drive_deg(self, distance_deg, min_speed, max_speed, gyro_header, break_hold):
         self.on_to_position(min_speed,max_speed,self.SLOW_SPEED_DEG,gyro_header)
         self.on_to_position(max_speed,max_speed,distance_deg-self.SLOW_SPEED_DEG,gyro_header)
         self.on_to_position(max_speed,min_speed,distance_deg,gyro_header,break_hold)
 
     # Drive to a certain rotation with a start and end speed
-    def on_to_position(self, start_speed, end_speed, position_degrees, gyro_header=0, break_hold=False):
+    def drive_deg_lin(self, position_degrees, start_speed, end_speed, gyro_header, break_hold=False):
         
         # Determine the degrees between the starting and ending position
         rel_end_degrees = position_degrees - self.m1.degrees
@@ -80,14 +89,27 @@ class MotorGroup:
         if break_hold:
             self.stop()
 
+    # Store the amount of turning degrees in which the robot accelerates/decellerates
+    SLOW_SPEED_ANG_DEG = 30 
+
     # Reset Gyroscope
     # Used at the start of each program
     def reset_gryo(self):
         self.gyro.calibrate()
         self.gyro.reset()
 
+    def turn_ang_rel(self, deg, min_speed = 4, max_speed = 12, break_hold=False):
+        self.turn_ang_abs(self.target_ang_deg+deg, min_speed, max_speed, break_hold)
+
+    def turn_ang_abs(self, deg, min_speed = 4, max_speed = 12, break_hold=False):
+        start_ang_deg = self.target_ang_deg
+        self.target_ang_deg = deg
+        self.turn_ang_abs_lin(start_ang_deg+self.SLOW_SPEED_ANG_DEG, min_speed, max_speed)
+        self.turn_ang_abs_lin(self.target_ang_deg-start_ang_deg, max_speed, max_speed)
+        self.turn_ang_abs_lin(self.target_ang_deg, max_speed, min_speed, break_hold)
+
     # Drive to a certain rotation with a start and end speed
-    def on_to_gyro_rotation(self, start_speed, end_speed, angle_degrees, break_hold=False):
+    def turn_ang_abs_lin(self, angle_degrees, start_speed, end_speed, break_hold=False):
         
         # Determine the degrees between the starting and ending position
         rel_end_angle = angle_degrees - self.gyro.angle
