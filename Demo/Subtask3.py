@@ -6,6 +6,7 @@ from time import sleep
 from ev3dev2.motor import MediumMotor, OUTPUT_B
 from ev3dev2.sound import Sound
 
+
 # -------------------------------------------------------------
 
 # Final Track
@@ -43,6 +44,8 @@ while ultrasonic_sensor.distance_inches > 1.5:
 drive.m1.stop()
 drive.m2.stop()
 #scan qr
+
+
 sleep(1)
 
 liftMtr.on_to_position(100,100,True)
