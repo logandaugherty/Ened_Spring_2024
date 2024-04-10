@@ -9,9 +9,9 @@ speaker = Sound()
 
 ultrasonic_sensor = UltrasonicSensor(INPUT_2)
 
-distance_in = ultrasonic_sensor.distance_inches
-while distance_in > 1.5:
-    distance_in = ultrasonic_sensor.distance_inches
+
+
+while ultrasonic_sensor.distance_inches > 0.5:
     sleep(0.02)
 speaker.speak("Life is full of obstacles, its how you overcome them that matter")
 

@@ -6,6 +6,8 @@ from ev3dev2.sound import Sound
 import time
 from time import sleep
 from ev3dev2.motor import MediumMotor, LargeMotor, SpeedPercent, OUTPUT_B,OUTPUT_D,OUTPUT_A
+from ev3dev2.sound import Sound
+
 
 
 # Initialize the sensor and motor
@@ -13,6 +15,7 @@ sensor = ColorSensor()
 liftMtr = MediumMotor(OUTPUT_B)
 driveLMtr = LargeMotor(OUTPUT_D)
 driveRMtr = LargeMotor(OUTPUT_A)
+speaker = Sound()
 #code for the assigned box number
 #cap off list to the first four numbers 
 #destroy 4 numbers from the final list in decode_qr
@@ -65,10 +68,6 @@ def arm_movement(position):
 # Function to scan 4 boxes and decode the QR code
 def decode_qr():
     qr_code=[]
-#initializtion code
-    #liftMtr.on(-20)
-    #sleep(2)
-    #liftMtr.stop()
     liftMtr.reset()
     increment = 115
     
@@ -86,15 +85,9 @@ def decode_qr():
     # Convert the QR code into a string or other format needed for further processing
     qr_code_str = ''.join(['1' if color == 'white' else '0' for color in qr_code])
     print(qr_code_str)
+    speaker.speak(qr_code_str)
     
     return qr_code_str
-
-# Main logic
-if __name__ == "__main__":
-    qr_data = decode_qr()
-    print("QR Code:", qr_data)
-    # Perform actions based on the qr_data
-    Sound().beep()
 
 
 
