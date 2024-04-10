@@ -3,20 +3,44 @@
 #port 1 color sensor and port b is medium motor
 from ev3dev2.sensor.lego import ColorSensor
 from ev3dev2.sound import Sound
-from ev3dev2.motor import MediumMotor, OUTPUT_B
 import time
 from time import sleep
+from ev3dev2.motor import MediumMotor, LargeMotor, SpeedPercent, OUTPUT_B,OUTPUT_D,OUTPUT_A
+
 
 # Initialize the sensor and motor
 sensor = ColorSensor()
 liftMtr = MediumMotor(OUTPUT_B)
-
+driveLMtr = LargeMotor(OUTPUT_D)
+driveRMtr = LargeMotor(OUTPUT_A)
 #code for the assigned box number
-#cap off list to the first four numbers
-#compare numbers and leave room to do movement if its right then do this 
+#cap off list to the first four numbers 
+#destroy 4 numbers from the final list in decode_qr
 def assigned_num(numba):
-    #start the movement and direct itself towards each box for subtask 3 and scan each code to try and find the assigned number and when it does the box will be picked up and dropped and point B
-    print(numba)
+    #move toward the box then do decode_qr()
+    if decode_qr() == numba:
+        #mechanism to lift the box if it equals the assigned number
+        liftMtr.reset()
+        liftMtr.on_to_position(-100,550,True)
+        sleep(0.125)
+
+        driveLMtr.on(-20,True,False)
+        driveRMtr.on(-20,True,False)
+        sleep(1)
+        driveLMtr.on(20,True,False)
+        driveRMtr.on(20,True,False)
+        sleep(1.3)
+        driveLMtr.stop()
+        driveRMtr.stop()
+
+        liftMtr.on_to_position(100,100,True)
+        sleep(5)
+        #move 180 degrees to go back to the line then move 90 again to bring to point B
+    else:
+        print("placeholder")
+        #move 180 degrees to go back to the line then move 90 again to bring to point B
+    return 0
+
 
 
 
@@ -61,7 +85,7 @@ def decode_qr():
     
     # Convert the QR code into a string or other format needed for further processing
     qr_code_str = ''.join(['1' if color == 'white' else '0' for color in qr_code])
-    print (qr_code_str)
+    print(qr_code_str)
     
     return qr_code_str
 
@@ -72,5 +96,5 @@ if __name__ == "__main__":
     # Perform actions based on the qr_data
     Sound().beep()
 
-assigned_num(1010)
+
 
