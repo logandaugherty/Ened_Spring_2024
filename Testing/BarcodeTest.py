@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from ev3dev2.motor import MediumMotor, LargeMotor, SpeedPercent, OUTPUT_B
 from time import sleep
-from Qrcodescanner import decode_qr
+from Demo.Qrcodescanner import decode_qr
 
 liftMtr = MediumMotor(OUTPUT_B)
 

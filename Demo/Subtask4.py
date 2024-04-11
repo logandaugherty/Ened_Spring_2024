@@ -16,35 +16,43 @@ box_num = 9
 # ----- CONSTANTS
 BOX_MARGIN_X = 0
 
-# ---------- INITIALIZATION -----
-drive = MotorGroup()
-drive.init()
-liftMtr = MediumMotor(OUTPUT_B)
-liftMtr.reset()
+def Subtask4(drive):
 
-liftMtr.reset()
-liftMtr.on_to_position(-100,550,True)
-sleep(0.125)
+    # ---------- INITIALIZATION -----
+    liftMtr = MediumMotor(OUTPUT_B)
+    liftMtr.reset()
 
-drive.m1.on(-20,True,False)
-drive.m2.on(-20,True,False)
-sleep(1)
-drive.m1.on(20,True,False)
-drive.m2.on(20,True,False)
-sleep(1.3)
-drive.m1.stop()
-drive.m2.stop()
+    liftMtr.reset()
+    liftMtr.on_to_position(-100,550,True)
+    sleep(0.125)
 
-liftMtr.on_to_position(100,100,True)
+    drive.m1.on(-20,True,False)
+    drive.m2.on(-20,True,False)
+    sleep(1)
+    drive.m1.on(20,True,False)
+    drive.m2.on(20,True,False)
+    sleep(1.3)
+    drive.m1.stop()
+    drive.m2.stop()
 
-drive.drive_in(-6)
+    liftMtr.on_to_position(100,100,True)
 
-drive.turn_ang_rel(-90)
+    drive.drive_in(-6)
 
-to_box_fwd = BOX_MARGIN_X + 9 + 6 * ((box_num-1) % 6)
-fwd = 54 - to_box_fwd
-fwd -= 12
-drive.drive_in(fwd)
+    drive.turn_ang_rel(-90)
 
-liftMtr.on_to_position(-100,550,True)
-drive.drive_in(-6)
+    to_box_fwd = BOX_MARGIN_X + 9 + 6 * ((box_num-1) % 6)
+    fwd = 54 - to_box_fwd
+    fwd -= 12
+    drive.drive_in(fwd)
+
+    liftMtr.on_to_position(-100,550,True)
+    drive.drive_in(-6)
+
+    liftMtr.on_to_position(-100,0,True)
+
+# Main logic
+if __name__ == "__main__":
+    drive = MotorGroup()
+    drive.init()
+    Subtask4(drive)

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from CustomMotorGroup import *
-from ev3dev2.sensor.lego import UltrasonicSensor
 from ev3dev2.sensor import INPUT_2
 from time import sleep
 from ev3dev2.motor import MediumMotor, OUTPUT_B
 from ev3dev2.sound import Sound
-
+from Qrcodescanner import checkBox
+from Subtask4 import Subtask4
+from Subtask3b import Subtask3b
 
 # -------------------------------------------------------------
 
@@ -14,7 +15,7 @@ from ev3dev2.sound import Sound
 
 # ENTER DATA HERE
 # Did the Subtask 1 succeed? If so, set this to true
-box_num = 9
+box_id = "1010"
 
 # -------------------------------------------------------------
 
@@ -24,37 +25,12 @@ BOX_MARGIN_X = 2.25
 
 # ---------- INITIALIZATION -----
 drive = MotorGroup()
-ultrasonic_sensor = UltrasonicSensor(INPUT_2)
 drive.init()
-speaker = Sound()
-liftMtr = MediumMotor(OUTPUT_B)
-liftMtr.reset()
 
-# # Drive towards box (15)
-# to_box_fwd = BOX_MARGIN_X +15
-# drive.drive_in(to_box_fwd)
+# Drive towards box (15)
+to_box_fwd = BOX_MARGIN_X + 15
+drive.drive_in(to_box_fwd)
 
-# drive.turn_ang_rel(90)
+drive.turn_ang_rel(90)
 
-# start_rotation = drive.m1.position
-drive.m1.on(20,True,False)
-drive.m2.on(20,True,False)
-while ultrasonic_sensor.distance_inches > 1.15:
-    sleep(0.02)
-
-
-drive.m1.stop()
-drive.m2.stop()
-
-
-
-
-# sleep(1)
-
-# liftMtr.on_to_position(100,100,True)
-
-# scan_success = True
-# if scan_success:
-#     speaker.speak('This box is correct')
-# else:
-#     speaker.speak('This box is not correct')
+Subtask3b(box_id,drive)

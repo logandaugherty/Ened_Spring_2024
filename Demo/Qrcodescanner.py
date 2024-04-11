@@ -16,6 +16,9 @@ liftMtr = MediumMotor(OUTPUT_B)
 driveLMtr = LargeMotor(OUTPUT_D)
 driveRMtr = LargeMotor(OUTPUT_A)
 speaker = Sound()
+def checkBox(id):
+    return decode_qr() == id
+
 #code for the assigned box number
 #cap off list to the first four numbers 
 #destroy 4 numbers from the final list in decode_qr
@@ -69,7 +72,7 @@ def arm_movement(position):
 def decode_qr():
     qr_code=[]
     liftMtr.reset()
-    increment = 115
+    increment = 120
     
     for i in range(4):
         position = 0 + i * increment # Defined positions for each box
