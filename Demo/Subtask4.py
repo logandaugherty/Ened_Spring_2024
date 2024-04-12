@@ -36,8 +36,15 @@ def Subtask4(drive):
     drive.m2.stop()
 
     liftMtr.on_to_position(100,100,True)
+    sleep(1)
 
-    drive.drive_in(-6)
+    drive.m1.on(-20,True,False)
+    drive.m2.on(-20,True,False)
+    sleep(1)
+    drive.m1.stop()
+    drive.m2.stop()
+    
+    sleep(1)
 
     drive.turn_ang_rel(-90)
 

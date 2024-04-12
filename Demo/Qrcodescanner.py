@@ -91,6 +91,3 @@ def decode_qr():
     speaker.speak(qr_code_str)
     
     return qr_code_str
-
-
-

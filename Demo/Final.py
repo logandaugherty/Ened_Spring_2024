@@ -1,6 +1,10 @@
-from Demo.CustomMotorGroup import *
-from Demo.ScanBox import *
-from Demo.Lift import *
+#!/usr/bin/env python3
+from CustomMotorGroup import MotorGroup
+from ev3dev2.sensor.lego import UltrasonicSensor
+from ev3dev2.sensor import INPUT_2
+from time import sleep
+from Qrcodescanner import checkBox
+from ev3dev2.motor import MediumMotor, OUTPUT_B
 
 # -------------------------------------------------------------
 
@@ -11,12 +15,14 @@ from Demo.Lift import *
 
 # Shelving Locations
 # A1 - 0, A2 - 1, C1 - 2, C2 - 3, B1 - 4, B2 - 5, D1 - 6, D2 - 7
-shelving_list = [2]
+shelving_list = [1]
 
 # Box Number
 # Numbered like the guide on canvas
 # 1-6 on bottom, 7-12 on top
-box_num_list = [5]
+box_num_list = [6]
+
+box_id_list = ['0101']
 
 # Target location
 # Home C - 1, Home B - 2, Home D - 3
@@ -28,12 +34,13 @@ target_location_list = [1]
 # -------------------------------------------------------------
 
 # ----- CONSTANTS
-BOX_MARGIN_X = 0
-BOX_MARGIN_Y = 6
+BOX_MARGIN_X = 0.7
 
 # ---------- INITIALIZATION -----
 drive = MotorGroup()
 drive.init()
+ultrasonic_sensor = UltrasonicSensor(INPUT_2)
+liftMtr = MediumMotor(OUTPUT_B)
 
 # ---------- OPERATIONS -----
 
@@ -42,6 +49,7 @@ for i in range(len(shelving_list)):
     shelving = shelving_list[i]
     box_num = box_num_list[i]
     target_location = target_location_list[i]
+    box_id = box_id_list[i]
 
     # ---- GET TO BOX 
     # Exit home and drive to correct Y level of target
@@ -60,20 +68,48 @@ for i in range(len(shelving_list)):
     else:
         drive.turn_ang_rel(-90)
 
-    # Drive right in front of box
-    fwd = BOX_MARGIN_Y
-    drive.drive_in(fwd)
+
+    target_speed = 4
+    drive.m1.on(target_speed,True,False)
+    drive.m2.on(target_speed,True,False)
+
+    sleep(2)
+
+    while ultrasonic_sensor.distance_inches > 1.3:
+        sleep(0.02)
+
+    drive.m1.stop()
+    drive.m2.stop()
+
+    sleep(1)
 
     # Scanning would take place here ~~~~
-    scan_success = scan_box()
+    scan_success = checkBox(box_id)
 
     # ---- LEAVE BOX
     if scan_success:
-        raise_box()
-        
-    # Drive backwards away from box
-    fwd = -BOX_MARGIN_Y
-    drive.drive_in(fwd)
+        liftMtr.reset()
+        liftMtr.on_to_position(-100,550,True)
+        sleep(0.125)
+
+        drive.m1.on(-20,True,False)
+        drive.m2.on(-20,True,False)
+        sleep(1)
+        drive.m1.on(20,True,False)
+        drive.m2.on(20,True,False)
+        sleep(1.3)
+        drive.m1.stop()
+        drive.m2.stop()
+
+        liftMtr.on_to_position(100,100,True)
+        sleep(1)
+
+    drive.m1.on(-20,True,False)
+    drive.m2.on(-20,True,False)
+    sleep(1)
+    drive.m1.stop()
+    drive.m2.stop()
+    sleep(1)
 
     if scan_success:
         # ---- DROP OFF BOX
@@ -119,12 +155,14 @@ for i in range(len(shelving_list)):
             fwd = leave_home_fwd-6
             drive.drive_in(fwd)
         
-        lower_box()
+        liftMtr.on_to_position(-100,550,True)
 
         # ---- Drive Home
         # Back away from drop-off home
         fwd = -6
         drive.drive_in(fwd)
+
+        liftMtr.on_to_position(-100,0,True)
 
         # If at Drop-off B
         if target_location == 1 or target_location == 3:
@@ -163,9 +201,9 @@ for i in range(len(shelving_list)):
     else:
         # Turn towards left edge of map
         if box_num >= 7:
-            drive.turn_ang_rel(-90)
-        else:
             drive.turn_ang_rel(90)
+        else:
+            drive.turn_ang_rel(-90)
 
         # Drive to left-hand edge of map
         drive.drive_in(to_box_fwd)

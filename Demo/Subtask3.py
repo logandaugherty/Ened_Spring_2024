@@ -15,13 +15,13 @@ from Subtask3b import Subtask3b
 
 # ENTER DATA HERE
 # Did the Subtask 1 succeed? If so, set this to true
-box_id = "1010"
+box_id = "0011"
 
 # -------------------------------------------------------------
 
 
 # ----- CONSTANTS
-BOX_MARGIN_X = 2.25
+BOX_MARGIN_X = 0.4
 
 # ---------- INITIALIZATION -----
 drive = MotorGroup()

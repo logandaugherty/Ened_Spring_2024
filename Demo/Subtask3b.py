@@ -15,7 +15,7 @@ from ev3dev2.sound import Sound
 
 # ENTER DATA HERE
 # Did the Subtask 1 succeed? If so, set this to true
-box_id_3b = "1010"
+box_id_3b = "0011"
 
 # -------------------------------------------------------------
 
@@ -23,17 +23,17 @@ def Subtask3b(box_id, drive):
     # ---------- INITIALIZATION -----
     ultrasonic_sensor = UltrasonicSensor(INPUT_2)
 
-    time_s = 0.2
-    target_speed = 20
+    time_s = 0.5
+    target_speed = 4
 
-    delta_t = 0.05
-    n = time_s/delta_t
-    increment = target_speed/n
-    for i in range(int(n)):
-        # start_rotation = drive.m1.position
-        drive.m1.on(i*increment,True,False)
-        drive.m2.on(i*increment,True,False)
-        sleep(delta_t)
+    # delta_t = 0.05
+    # n = time_s/delta_t
+    # increment = target_speed/n
+    # for i in range(int(n)):
+    #     # start_rotation = drive.m1.position
+    #     drive.m1.on(i*increment,True,False)
+    #     drive.m2.on(i*increment,True,False)
+    #     sleep(delta_t)
     drive.m1.on(target_speed,True,False)
     drive.m2.on(target_speed,True,False)
 
@@ -46,6 +46,7 @@ def Subtask3b(box_id, drive):
     sleep(1)
 
     if checkBox(box_id):
+        sleep(5)
         Subtask4(drive)
     else:
         speaker = Sound()
